@@ -8,6 +8,10 @@ end
 gem 'dotenv-rails', groups: [:development, :test]
 
 gem 'activeadmin'
+gem 'grape'
+gem 'rack-cors', :require => 'rack/cors'
+gem 'grape-active_model_serializers'
+gem 'grape-swagger'
 
 # Plus integrations with:
 gem 'devise'
