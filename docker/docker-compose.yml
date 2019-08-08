@@ -4,9 +4,14 @@ services:
   db:
     image: postgres:10.6-alpine
     container_name: db
+    volumes:
+      - team_funds_rails_data-volume:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: team_funds_development
       POSTGRES_PASSWORD: Anmeldung1.
       POSTGRES_USER: postgres
     ports:
       - 5435:5432
+
+volumes:
+  team_funds_rails_data-volume:

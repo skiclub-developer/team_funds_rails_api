@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190715213454) do
+ActiveRecord::Schema.define(version: 20190808125049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,35 @@ ActiveRecord::Schema.define(version: 20190715213454) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  create_table "member_beer_payments", force: :cascade do |t|
+    t.integer  "members_id"
+    t.integer  "amount"
+    t.string   "changed_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["members_id"], name: "index_member_beer_payments_on_members_id", using: :btree
+  end
+
+  create_table "member_payments", force: :cascade do |t|
+    t.integer  "members_id"
+    t.integer  "amount"
+    t.string   "changed_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["members_id"], name: "index_member_payments_on_members_id", using: :btree
+  end
+
+  create_table "member_penalties", force: :cascade do |t|
+    t.integer  "members_id"
+    t.integer  "penalties_id"
+    t.integer  "amount"
+    t.string   "changed_by"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["members_id"], name: "index_member_penalties_on_members_id", using: :btree
+    t.index ["penalties_id"], name: "index_member_penalties_on_penalties_id", using: :btree
+  end
+
   create_table "members", force: :cascade do |t|
     t.string   "name"
     t.integer  "current_money_penalties", default: 0
@@ -49,4 +78,14 @@ ActiveRecord::Schema.define(version: 20190715213454) do
     t.datetime "updated_at",                          null: false
   end
 
+  create_table "penalties", force: :cascade do |t|
+    t.string   "penalty_name"
+    t.integer  "penalty_cost"
+    t.integer  "case_of_beer_cost"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_foreign_key "member_penalties", "members", column: "members_id"
+  add_foreign_key "member_penalties", "penalties", column: "penalties_id"
 end
