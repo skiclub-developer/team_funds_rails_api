@@ -1,7 +1,7 @@
 class AddMemberBeerPaymentTable < ActiveRecord::Migration[5.0]
   def change
     create_table :member_beer_payments do |t|
-      t.references :members, index: true
+      t.belongs_to :member, index: true
       t.integer :amount
       t.string :changed_by
 

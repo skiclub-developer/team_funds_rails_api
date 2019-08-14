@@ -2,6 +2,8 @@ module API
   module V1
     class Base < Grape::API
       mount API::V1::Members
+      mount API::V1::Punishments
+      mount API::V1::MemberPenalties
 
       add_swagger_documentation(
           api_version: "v1",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190808125049) do
+ActiveRecord::Schema.define(version: 20190814151618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,32 +42,32 @@ ActiveRecord::Schema.define(version: 20190808125049) do
   end
 
   create_table "member_beer_payments", force: :cascade do |t|
-    t.integer  "members_id"
+    t.integer  "member_id"
     t.integer  "amount"
     t.string   "changed_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["members_id"], name: "index_member_beer_payments_on_members_id", using: :btree
+    t.index ["member_id"], name: "index_member_beer_payments_on_member_id", using: :btree
   end
 
   create_table "member_payments", force: :cascade do |t|
-    t.integer  "members_id"
+    t.integer  "member_id"
     t.integer  "amount"
     t.string   "changed_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["members_id"], name: "index_member_payments_on_members_id", using: :btree
+    t.index ["member_id"], name: "index_member_payments_on_member_id", using: :btree
   end
 
   create_table "member_penalties", force: :cascade do |t|
-    t.integer  "members_id"
-    t.integer  "penalties_id"
+    t.integer  "member_id"
+    t.integer  "penalty_id"
     t.integer  "amount"
     t.string   "changed_by"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["members_id"], name: "index_member_penalties_on_members_id", using: :btree
-    t.index ["penalties_id"], name: "index_member_penalties_on_penalties_id", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_member_penalties_on_member_id", using: :btree
+    t.index ["penalty_id"], name: "index_member_penalties_on_penalty_id", using: :btree
   end
 
   create_table "members", force: :cascade do |t|
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(version: 20190808125049) do
     t.integer  "current_beer_penalties",  default: 0
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.integer  "member_type"
   end
 
   create_table "penalties", force: :cascade do |t|
@@ -86,6 +87,6 @@ ActiveRecord::Schema.define(version: 20190808125049) do
     t.datetime "updated_at",        null: false
   end
 
-  add_foreign_key "member_penalties", "members", column: "members_id"
-  add_foreign_key "member_penalties", "penalties", column: "penalties_id"
+  add_foreign_key "member_penalties", "members"
+  add_foreign_key "member_penalties", "penalties"
 end
