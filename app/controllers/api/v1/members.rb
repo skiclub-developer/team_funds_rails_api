@@ -154,36 +154,36 @@ module API
           members_not_found = []
           updated_members = []
 
-          members_param.each do |member|
-            member_name = member["name"]
-            amount = member["amount"].to_i
-            current_member = Member.find_by(name: member_name)
-            if current_member.present?
-              #calculate current cost and beer cost
-              cost = current_penalty.penalty_cost * amount
-              beer_cost = current_penalty.case_of_beer_cost * amount
+          if current_penalty.present?
+            members_param.each do |member|
+              member_name = member["name"]
+              amount = member["amount"].to_i
+              current_member = Member.find_by(name: member_name)
+              if current_member.present?
+                #calculate current cost and beer cost
+                cost = current_penalty.penalty_cost * amount
+                beer_cost = current_penalty.case_of_beer_cost * amount
 
-              #update penalties for current member
-              current_member.current_money_penalties = current_member.current_money_penalties + cost
-              current_member.current_beer_penalties = current_member.current_beer_penalties + beer_cost
-              current_member.save!
+                #update penalties for current member
+                current_member.current_money_penalties = current_member.current_money_penalties + cost
+                current_member.current_beer_penalties = current_member.current_beer_penalties + beer_cost
+                current_member.save!
 
-              #create member penalty
-              member_penalty = MemberPenalty.new
-              member_penalty.member = current_member
-              member_penalty.penalty = current_penalty
-              member_penalty.amount = amount
-              member_penalty.changed_by = telegram_user
-              member_penalty.save
+                #create member penalty
+                MemberPenalty.new(member: current_member, penalty: current_penalty, amount: amount,
+                                  changed_by: telegram_user).save
 
-              #add member to updated members
-              updated_members.push({name: current_member.name, cost: cost})
-            else
-              members_not_found.push(member_name)
+                #add member to updated members
+                updated_members.push({name: current_member.name, cost: cost})
+              else
+                members_not_found.push(member_name)
+              end
             end
-          end
 
-          {updated_members: updated_members, members_not_found: members_not_found}
+            {updated_members: updated_members, members_not_found: members_not_found}
+          else
+            {error: "Die Strafe #{penalty_name} konnte nicht gefunden werden"}
+          end
         end
 
         desc "Return a member"

@@ -13,5 +13,30 @@ services:
     ports:
       - 5435:5432
 
+  web:
+    image: skiclubdeveloper/team_funds_api:2
+    container_name: api
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    environment:
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: Anmeldung1.
+      DATABASE_NAME: team_funds_development
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+
+  bot:
+    image: skiclubdeveloper/team_funds_bot:2
+    container_name: bot
+    command: ruby bot.rb
+    environment:
+      TOKEN: 762317235:AAGAVpEswx5aAuf8ZjueYfAGCkP7bTy9fIQ
+    depends_on:
+      - web
+
+
 volumes:
   team_funds_rails_data-volume:
