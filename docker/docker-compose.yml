@@ -29,11 +29,12 @@ services:
       - db
 
   bot:
-    image: skiclubdeveloper/team_funds_bot:2
+    image: skiclubdeveloper/team_funds_bot:prod-1.0.2
     container_name: bot
     command: ruby bot.rb
     environment:
       TOKEN: 762317235:AAGAVpEswx5aAuf8ZjueYfAGCkP7bTy9fIQ
+      HOST: api:3000
     depends_on:
       - web
 

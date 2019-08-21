@@ -57,27 +57,33 @@ module API
             if payment_type.present?
               updated_members = []
               members_not_found = []
+              members_without_amount = []
               members_param.each do |member_param|
                 name = member_param["name"]
                 amount = member_param["amount"]
                 member = Member.find_by(name: name)
                 if member.present?
-                  if payment_type == "beer"
-                    member.current_beer_penalties = member.current_beer_penalties + amount
-                    member.save
+                  if amount.present?
+                    if payment_type == "beer"
+                      member.current_beer_penalties = member.current_beer_penalties + amount
+                      member.save
 
-                    updated_members.push({name: name, amount: amount})
+                      updated_members.push({name: name, amount: amount})
+                    else
+                      member.current_money_penalties = member.current_money_penalties + amount
+                      member.save
+
+                      updated_members.push({name: name, amount: amount})
+                    end
                   else
-                    member.current_money_penalties = member.current_money_penalties + amount
-                    member.save
-
-                    updated_members.push({name: name, amount: amount})
+                    members_without_amount.push name
                   end
                 else
                   members_not_found.push name
                 end
               end
-              {updated_members: updated_members, members_not_found: members_not_found}
+              {updated_members: updated_members, members_not_found: members_not_found,
+               members_without_amount: members_without_amount}
             else
               {error: "Kein payment_type mit angegeben"}
             end
